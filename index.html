@@ -536,12 +536,13 @@
       <div class="field">
         <label>ジャンル</label>
         <select id="f-genre">
-          <option value="小説">小説</option>
-          <option value="ビジネス">ビジネス</option>
-          <option value="技術書">技術書</option>
-          <option value="歴史">歴史</option>
-          <option value="自己啓発">自己啓発</option>
-          <option value="その他">その他</option>
+          <option value="文学・評論">文学・評論</option>
+          <option value="ビジネス・経済">ビジネス・経済</option>
+          <option value="教育・自己啓発">教育・自己啓発</option>
+          <option value="歴史・地理">歴史・地理</option>
+          <option value="人文・思想・宗教">人文・思想・宗教</option>
+          <option value="政治・社会">政治・社会</option>
+          <option value="趣味・実用">趣味・実用</option>
         </select>
       </div>
       <div class="field">
@@ -567,12 +568,13 @@
     </select>
     <select id="filter-genre" onchange="render()">
       <option value="">すべてのジャンル</option>
-      <option value="小説">小説</option>
-      <option value="ビジネス">ビジネス</option>
-      <option value="技術書">技術書</option>
-      <option value="歴史">歴史</option>
-      <option value="自己啓発">自己啓発</option>
-      <option value="その他">その他</option>
+      <option value="文学・評論">文学・評論</option>
+      <option value="ビジネス・経済">ビジネス・経済</option>
+      <option value="教育・自己啓発">教育・自己啓発</option>
+      <option value="歴史・地理">歴史・地理</option>
+      <option value="人文・思想・宗教">人文・思想・宗教</option>
+      <option value="政治・社会">政治・社会</option>
+      <option value="趣味・実用">趣味・実用</option>
     </select>
   </div>
 
@@ -631,12 +633,13 @@
       <div class="field">
         <label>ジャンル</label>
         <select id="e-genre">
-          <option value="小説">小説</option>
-          <option value="ビジネス">ビジネス</option>
-          <option value="技術書">技術書</option>
-          <option value="歴史">歴史</option>
-          <option value="自己啓発">自己啓発</option>
-          <option value="その他">その他</option>
+          <option value="文学・評論">文学・評論</option>
+          <option value="ビジネス・経済">ビジネス・経済</option>
+          <option value="教育・自己啓発">教育・自己啓発</option>
+          <option value="歴史・地理">歴史・地理</option>
+          <option value="人文・思想・宗教">人文・思想・宗教</option>
+          <option value="政治・社会">政治・社会</option>
+          <option value="趣味・実用">趣味・実用</option>
         </select>
       </div>
       <div class="field">
@@ -807,14 +810,15 @@
 
     // ジャンル統計
     const GENRE_COLORS = {
-      '小説':    'linear-gradient(90deg,#bf5af2,#9b3ec9)',
-      'ビジネス':'linear-gradient(90deg,#0071e3,#0051a8)',
-      '自己啓発':'linear-gradient(90deg,#30d158,#25a244)',
-      '歴史':    'linear-gradient(90deg,#ff9f0a,#c97800)',
-      '技術書':  'linear-gradient(90deg,#64d2ff,#0099cc)',
-      'その他':  'linear-gradient(90deg,#aeaeb2,#8e8e93)',
+      '文学・評論':    'linear-gradient(90deg,#bf5af2,#9b3ec9)',
+      'ビジネス・経済':'linear-gradient(90deg,#0071e3,#0051a8)',
+      '教育・自己啓発':'linear-gradient(90deg,#30d158,#25a244)',
+      '歴史・地理':    'linear-gradient(90deg,#ff9f0a,#c97800)',
+      '人文・思想・宗教':'linear-gradient(90deg,#ff6b6b,#c0392b)',
+      '政治・社会':    'linear-gradient(90deg,#64d2ff,#0099cc)',
+      '趣味・実用':    'linear-gradient(90deg,#aeaeb2,#8e8e93)',
     };
-    const genreOrder = ['小説','ビジネス','自己啓発','歴史','技術書','その他'];
+    const genreOrder = ['文学・評論','ビジネス・経済','教育・自己啓発','歴史・地理','人文・思想・宗教','政治・社会','趣味・実用'];
     const genreCount = {};
     books.forEach(b => { genreCount[b.genre] = (genreCount[b.genre] || 0) + 1; });
     const maxGenre = Math.max(...Object.values(genreCount), 1);
@@ -874,56 +878,56 @@
   if (books.length === 0) {
     books = [
       // ── 読了 ──
-      { id: uid(), title: '人を動かす',                                           author: 'デール・カーネギー',       status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-11-13T07:22:39.522Z' },
-      { id: uid(), title: '自分の中に毒を持て',                                   author: '岡本太郎',                 status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-11-13T07:23:04.697Z' },
-      { id: uid(), title: '世界の一流は「休日」に何をしているのか',               author: '越川慎司',                 status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-04-06T13:29:40.945Z' },
-      { id: uid(), title: '億までの人億からの人',                                 author: '田中渓',                   status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-05-03T08:52:18.621Z' },
-      { id: uid(), title: '入社1年目のお金の教科書',                             author: '田口智隆',                 status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-05-03T08:56:01.610Z' },
-      { id: uid(), title: '国をつくるという仕事',                                 author: '西水美恵子',               status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-05-03T08:56:10.183Z' },
-      { id: uid(), title: '感情の整理学',                                         author: '和田秀樹',                 status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:32:08.283Z' },
-      { id: uid(), title: '仕事ができる人はなぜ筋トレをするのか',               author: '山本ケイイチ',             status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-03-23T11:41:31.693Z' },
-      { id: uid(), title: '世界一やさしい「やりたいこと」の見つけ方',           author: '八木仁平',                 status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:26:35.569Z' },
-      { id: uid(), title: '聖書、コーラン、仏典 – 原典から宗教の本質をさぐる',  author: '中村圭志',                 status: '読了', genre: 'その他',   deadline: '', memo: '5月18日返却', createdAt: '2025-05-28T17:35:19.766Z' },
-      { id: uid(), title: 'マスカレード・ナイト',                                 author: '東野圭吾',                 status: '読了', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-08T16:20:31.493Z' },
-      { id: uid(), title: 'ボクたちはみんな大人になれなかった',                   author: '燃え殻',                   status: '読了', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-25T09:55:58.016Z' },
-      { id: uid(), title: '元彼の遺言状',                                         author: '新川帆立',                 status: '読了', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-08T16:31:41.145Z' },
-      { id: uid(), title: '愛するということ',                                     author: 'エーリッヒ・フロム',       status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-05-03T08:56:04.233Z' },
-      { id: uid(), title: '福翁自伝',                                             author: '福澤諭吉',                 status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:19:16.549Z' },
-      { id: uid(), title: '文明論之概略',                                         author: '福澤諭吉',                 status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:19:17.903Z' },
-      { id: uid(), title: '2040年半導体の未来',                                   author: '小柴満信',                 status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-03-23T11:41:29.581Z' },
-      { id: uid(), title: '楽しいカメラ',                                         author: '橘田龍馬',                 status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:35:03.233Z' },
-      { id: uid(), title: '美しい風景写真のマイルール',                           author: '',                         status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:34:26.802Z' },
+      { id: uid(), title: '人を動かす',                                           author: 'デール・カーネギー',       status: '読了', genre: '教育・自己啓発', deadline: '', memo: '',           createdAt: '2025-11-13T07:22:39.522Z' },
+      { id: uid(), title: '自分の中に毒を持て',                                   author: '岡本太郎',                 status: '読了', genre: '教育・自己啓発', deadline: '', memo: '',           createdAt: '2025-11-13T07:23:04.697Z' },
+      { id: uid(), title: '世界の一流は「休日」に何をしているのか',               author: '越川慎司',                 status: '読了', genre: '教育・自己啓発', deadline: '', memo: '',           createdAt: '2025-04-06T13:29:40.945Z' },
+      { id: uid(), title: '億までの人億からの人',                                 author: '田中渓',                   status: '読了', genre: '教育・自己啓発', deadline: '', memo: '',           createdAt: '2025-05-03T08:52:18.621Z' },
+      { id: uid(), title: '入社1年目のお金の教科書',                             author: '田口智隆',                 status: '読了', genre: '教育・自己啓発', deadline: '', memo: '',           createdAt: '2025-05-03T08:56:01.610Z' },
+      { id: uid(), title: '国をつくるという仕事',                                 author: '西水美恵子',               status: '読了', genre: '教育・自己啓発', deadline: '', memo: '',           createdAt: '2025-05-03T08:56:10.183Z' },
+      { id: uid(), title: '感情の整理学',                                         author: '和田秀樹',                 status: '読了', genre: '教育・自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:32:08.283Z' },
+      { id: uid(), title: '仕事ができる人はなぜ筋トレをするのか',               author: '山本ケイイチ',             status: '読了', genre: '教育・自己啓発', deadline: '', memo: '',           createdAt: '2025-03-23T11:41:31.693Z' },
+      { id: uid(), title: '世界一やさしい「やりたいこと」の見つけ方',           author: '八木仁平',                 status: '読了', genre: '教育・自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:26:35.569Z' },
+      { id: uid(), title: '聖書、コーラン、仏典 – 原典から宗教の本質をさぐる',  author: '中村圭志',                 status: '読了', genre: '人文・思想・宗教', deadline: '', memo: '5月18日返却', createdAt: '2025-05-28T17:35:19.766Z' },
+      { id: uid(), title: 'マスカレード・ナイト',                                 author: '東野圭吾',                 status: '読了', genre: '文学・評論',     deadline: '', memo: '',           createdAt: '2025-01-08T16:20:31.493Z' },
+      { id: uid(), title: 'ボクたちはみんな大人になれなかった',                   author: '燃え殻',                   status: '読了', genre: '文学・評論',     deadline: '', memo: '',           createdAt: '2025-01-25T09:55:58.016Z' },
+      { id: uid(), title: '元彼の遺言状',                                         author: '新川帆立',                 status: '読了', genre: '文学・評論',     deadline: '', memo: '',           createdAt: '2025-01-08T16:31:41.145Z' },
+      { id: uid(), title: '愛するということ',                                     author: 'エーリッヒ・フロム',       status: '読了', genre: '人文・思想・宗教', deadline: '', memo: '',          createdAt: '2025-05-03T08:56:04.233Z' },
+      { id: uid(), title: '福翁自伝',                                             author: '福澤諭吉',                 status: '読了', genre: '人文・思想・宗教', deadline: '', memo: '',          createdAt: '2025-01-08T16:19:16.549Z' },
+      { id: uid(), title: '文明論之概略',                                         author: '福澤諭吉',                 status: '読了', genre: '人文・思想・宗教', deadline: '', memo: '',          createdAt: '2025-01-08T16:19:17.903Z' },
+      { id: uid(), title: '2040年半導体の未来',                                   author: '小柴満信',                 status: '読了', genre: 'ビジネス・経済', deadline: '', memo: '',           createdAt: '2025-03-23T11:41:29.581Z' },
+      { id: uid(), title: '楽しいカメラ',                                         author: '橘田龍馬',                 status: '読了', genre: '趣味・実用',     deadline: '', memo: '',           createdAt: '2025-01-08T16:35:03.233Z' },
+      { id: uid(), title: '美しい風景写真のマイルール',                           author: '',                         status: '読了', genre: '趣味・実用',     deadline: '', memo: '',           createdAt: '2025-01-08T16:34:26.802Z' },
       // ── 未読 ──
-      { id: uid(), title: 'アルケミスト',                                         author: '',                         status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-07-30T04:56:21.657Z' },
-      { id: uid(), title: 'いつかティファニーで朝食を',                           author: '',                         status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-07-30T04:56:39.150Z' },
-      { id: uid(), title: 'シャーロック・ホームズの冒険',                         author: 'コナン・ドイル',           status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-08T16:37:35.034Z' },
-      { id: uid(), title: '宮沢賢治『銀河鉄道の夜』と宇宙の旅',                 author: '谷口義明',                 status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-08T16:48:46.099Z' },
-      { id: uid(), title: '君たちはどう生きるか',                                 author: '吉野源三郎',               status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-08T16:40:40.807Z' },
-      { id: uid(), title: '世界を変えた10冊の本',                                 author: '池上彰',                   status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-08T16:49:16.221Z' },
-      { id: uid(), title: '青が散る',                                             author: '宮本輝',                   status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-14T11:45:44.223Z' },
-      { id: uid(), title: '考える技術・書く技術',                                 author: 'バーバラ・ミント',         status: '未読', genre: 'ビジネス', deadline: '', memo: '',           createdAt: '2025-02-02T05:53:49.961Z' },
-      { id: uid(), title: 'コーポレートファイナンス 戦略と実践',                 author: '田中慎一/保田隆明',        status: '未読', genre: 'ビジネス', deadline: '', memo: '',           createdAt: '2025-01-13T16:09:04.747Z' },
-      { id: uid(), title: '21世紀の資本',                                         author: 'トマ・ピケティ',           status: '未読', genre: 'ビジネス', deadline: '', memo: '',           createdAt: '2025-01-08T16:38:55.218Z' },
-      { id: uid(), title: '芸術企業論',                                           author: '村上隆',                   status: '未読', genre: 'ビジネス', deadline: '', memo: '',           createdAt: '2025-01-08T16:37:56.843Z' },
-      { id: uid(), title: 'サピエンス全史',                                       author: 'ユヴァル・ノア・ハラリ',   status: '未読', genre: '歴史',     deadline: '', memo: '',           createdAt: '2025-01-08T16:57:45.620Z' },
-      { id: uid(), title: '君主論',                                               author: 'マキアヴェリ',             status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:45:04.540Z' },
-      { id: uid(), title: '方法序説・情念論',                                     author: 'デカルト',                 status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:35:53.164Z' },
-      { id: uid(), title: '後世への最大遺物デンマルク国の話',                     author: '内村鑑三',                 status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:45:46.627Z' },
-      { id: uid(), title: '道徳形而上学原論',                                     author: 'カント',                   status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:46:13.670Z' },
-      { id: uid(), title: '文明の衝突と21世紀の日本',                             author: 'サミュエル・ハンチントン', status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:47:57.565Z' },
-      { id: uid(), title: '東洋の理想',                                           author: '岡倉天心',                 status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:44:36.790Z' },
-      { id: uid(), title: '生の短さについて',                                     author: 'セネカ',                   status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:46:33.910Z' },
-      { id: uid(), title: '武士道',                                               author: '新渡戸稲造',               status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:42:45.362Z' },
-      { id: uid(), title: '菊と刀',                                               author: 'ルース・ベネディクト',     status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:44:18.388Z' },
-      { id: uid(), title: '老子',                                                 author: '老子',                     status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:36:28.480Z' },
-      { id: uid(), title: 'ルポ外国人ぎらい',                                     author: '宮下洋一',                 status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:47:11.095Z' },
-      { id: uid(), title: 'カレー移民の謎',                                       author: '室橋裕和',                 status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-10T18:24:51.020Z' },
-      { id: uid(), title: '地球に残された時間',                                   author: 'レスター・R・ブラウン',   status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:24:40.527Z' },
-      { id: uid(), title: 'ことわざ慣用句辞典',                                   author: '雨海博洋',                 status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:33:30.482Z' },
-      { id: uid(), title: '確実に自分を変えていく法',                             author: '茂木健一郎',               status: '未読', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:39:43.446Z' },
-      { id: uid(), title: '学問のしくみ辞典',                                     author: '茂木健一郎',               status: '未読', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:39:21.004Z' },
-      { id: uid(), title: '生き残る判断生き残れない行動',                         author: 'アマンダ・リプリー',       status: '未読', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:25:17.866Z' },
-      { id: uid(), title: '時間栄養学入門',                                       author: '柴田重信',                 status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:21:26.243Z' },
+      { id: uid(), title: 'アルケミスト',                                         author: '',                         status: '未読', genre: '文学・評論',     deadline: '', memo: '',           createdAt: '2025-07-30T04:56:21.657Z' },
+      { id: uid(), title: 'いつかティファニーで朝食を',                           author: '',                         status: '未読', genre: '文学・評論',     deadline: '', memo: '',           createdAt: '2025-07-30T04:56:39.150Z' },
+      { id: uid(), title: 'シャーロック・ホームズの冒険',                         author: 'コナン・ドイル',           status: '未読', genre: '文学・評論',     deadline: '', memo: '',           createdAt: '2025-01-08T16:37:35.034Z' },
+      { id: uid(), title: '宮沢賢知『銀河鉄道の夜』と宇宙の旅',                 author: '谷口義明',                 status: '未読', genre: '文学・評論',     deadline: '', memo: '',           createdAt: '2025-01-08T16:48:46.099Z' },
+      { id: uid(), title: '君たちはどう生きるか',                                 author: '吉野源三郎',               status: '未読', genre: '文学・評論',     deadline: '', memo: '',           createdAt: '2025-01-08T16:40:40.807Z' },
+      { id: uid(), title: '世界を変えた10冊の本',                                 author: '池上彰',                   status: '未読', genre: '文学・評論',     deadline: '', memo: '',           createdAt: '2025-01-08T16:49:16.221Z' },
+      { id: uid(), title: '青が散る',                                             author: '宮本輝',                   status: '未読', genre: '文学・評論',     deadline: '', memo: '',           createdAt: '2025-01-14T11:45:44.223Z' },
+      { id: uid(), title: '考える技術・書く技術',                                 author: 'バーバラ・ミント',         status: '未読', genre: 'ビジネス・経済', deadline: '', memo: '',           createdAt: '2025-02-02T05:53:49.961Z' },
+      { id: uid(), title: 'コーポレートファイナンス 戦略と実践',                 author: '田中慎一/保田隆明',        status: '未読', genre: 'ビジネス・経済', deadline: '', memo: '',           createdAt: '2025-01-13T16:09:04.747Z' },
+      { id: uid(), title: '21世紀の資本',                                         author: 'トマ・ピケティ',           status: '未読', genre: 'ビジネス・経済', deadline: '', memo: '',           createdAt: '2025-01-08T16:38:55.218Z' },
+      { id: uid(), title: '芸術企業論',                                           author: '村上隆',                   status: '未読', genre: 'ビジネス・経済', deadline: '', memo: '',           createdAt: '2025-01-08T16:37:56.843Z' },
+      { id: uid(), title: 'サピエンス全史',                                       author: 'ユヴァル・ノア・ハラリ',   status: '未読', genre: '歴史・地理',     deadline: '', memo: '',           createdAt: '2025-01-08T16:57:45.620Z' },
+      { id: uid(), title: '君主論',                                               author: 'マキアヴェリ',             status: '未読', genre: '人文・思想・宗教', deadline: '', memo: '',          createdAt: '2025-01-08T16:45:04.540Z' },
+      { id: uid(), title: '方法序説・情念論',                                     author: 'デカルト',                 status: '未読', genre: '人文・思想・宗教', deadline: '', memo: '',          createdAt: '2025-01-08T16:35:53.164Z' },
+      { id: uid(), title: '後世への最大遺物デンマルク国の話',                     author: '内村鑑三',                 status: '未読', genre: '人文・思想・宗教', deadline: '', memo: '',          createdAt: '2025-01-08T16:45:46.627Z' },
+      { id: uid(), title: '道徳形而上学原論',                                     author: 'カント',                   status: '未読', genre: '人文・思想・宗教', deadline: '', memo: '',          createdAt: '2025-01-08T16:46:13.670Z' },
+      { id: uid(), title: '文明の衝突と21世紀の日本',                             author: 'サミュエル・ハンチントン', status: '未読', genre: '政治・社会',     deadline: '', memo: '',           createdAt: '2025-01-08T16:47:57.565Z' },
+      { id: uid(), title: '東洋の理想',                                           author: '岡倉天心',                 status: '未読', genre: '人文・思想・宗教', deadline: '', memo: '',          createdAt: '2025-01-08T16:44:36.790Z' },
+      { id: uid(), title: '生の短さについて',                                     author: 'セネカ',                   status: '未読', genre: '人文・思想・宗教', deadline: '', memo: '',          createdAt: '2025-01-08T16:46:33.910Z' },
+      { id: uid(), title: '武士道',                                               author: '新渡戸稲造',               status: '未読', genre: '人文・思想・宗教', deadline: '', memo: '',          createdAt: '2025-01-08T16:42:45.362Z' },
+      { id: uid(), title: '菊と刀',                                               author: 'ルース・ベネディクト',     status: '未読', genre: '人文・思想・宗教', deadline: '', memo: '',          createdAt: '2025-01-08T16:44:18.388Z' },
+      { id: uid(), title: '老子',                                                 author: '老子',                     status: '未読', genre: '人文・思想・宗教', deadline: '', memo: '',          createdAt: '2025-01-08T16:36:28.480Z' },
+      { id: uid(), title: 'ルポ外国人ぎらい',                                     author: '宮下洋一',                 status: '未読', genre: '政治・社会',     deadline: '', memo: '',           createdAt: '2025-01-08T16:47:11.095Z' },
+      { id: uid(), title: 'カレー移民の謎',                                       author: '室橋裕和',                 status: '未読', genre: '政治・社会',     deadline: '', memo: '',           createdAt: '2025-01-10T18:24:51.020Z' },
+      { id: uid(), title: '地球に残された時間',                                   author: 'レスター・R・ブラウン',   status: '未読', genre: '政治・社会',     deadline: '', memo: '',           createdAt: '2025-01-08T16:24:40.527Z' },
+      { id: uid(), title: 'ことわざ慣用句辞典',                                   author: '雨海博洋',                 status: '未読', genre: '趣味・実用',     deadline: '', memo: '',           createdAt: '2025-01-08T16:33:30.482Z' },
+      { id: uid(), title: '確実に自分を変えていく法',                             author: '茂木健一郎',               status: '未読', genre: '教育・自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:39:43.446Z' },
+      { id: uid(), title: '学問のしくみ辞典',                                     author: '茂木健一郎',               status: '未読', genre: '教育・自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:39:21.004Z' },
+      { id: uid(), title: '生き残る判断生き残れない行動',                         author: 'アマンダ・リプリー',       status: '未読', genre: '教育・自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:25:17.866Z' },
+      { id: uid(), title: '時間栄養学入門',                                       author: '柴田重信',                 status: '未読', genre: '趣味・実用',     deadline: '', memo: '',           createdAt: '2025-01-08T16:21:26.243Z' },
     ];
     save();
   }
