@@ -106,6 +106,56 @@
       margin-top: 4px;
     }
 
+    /* ── ジャンル統計 ── */
+    .genre-card {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .genre-rows { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+    .genre-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .genre-name {
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      width: 72px;
+      flex-shrink: 0;
+    }
+    .genre-bar-wrap {
+      flex: 1;
+      background: var(--bg);
+      border-radius: 4px;
+      height: 8px;
+      overflow: hidden;
+    }
+    .genre-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width .4s cubic-bezier(.4,0,.2,1);
+    }
+    .genre-num {
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--text);
+      width: 28px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .genre-pct {
+      font-size: .72rem;
+      color: var(--text-tertiary);
+      width: 34px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
     /* ── 追加フォーム ── */
     .form-card {
       background: var(--surface);
@@ -457,6 +507,12 @@
     </div>
   </div>
 
+  <!-- ジャンル統計 -->
+  <div class="genre-card">
+    <div class="section-title">ジャンル別</div>
+    <div class="genre-rows" id="genre-rows"></div>
+  </div>
+
   <!-- 追加フォーム -->
   <div class="form-card">
     <div class="section-title">本を追加する</div>
@@ -748,6 +804,37 @@
     document.getElementById('st-reading').textContent = reading;
     document.getElementById('st-unread').textContent  = unread;
     document.getElementById('header-count').textContent = `${total} 冊`;
+
+    // ジャンル統計
+    const GENRE_COLORS = {
+      '小説':    'linear-gradient(90deg,#bf5af2,#9b3ec9)',
+      'ビジネス':'linear-gradient(90deg,#0071e3,#0051a8)',
+      '自己啓発':'linear-gradient(90deg,#30d158,#25a244)',
+      '歴史':    'linear-gradient(90deg,#ff9f0a,#c97800)',
+      '技術書':  'linear-gradient(90deg,#64d2ff,#0099cc)',
+      'その他':  'linear-gradient(90deg,#aeaeb2,#8e8e93)',
+    };
+    const genreOrder = ['小説','ビジネス','自己啓発','歴史','技術書','その他'];
+    const genreCount = {};
+    books.forEach(b => { genreCount[b.genre] = (genreCount[b.genre] || 0) + 1; });
+    const maxGenre = Math.max(...Object.values(genreCount), 1);
+    document.getElementById('genre-rows').innerHTML = genreOrder
+      .filter(g => genreCount[g])
+      .map(g => {
+        const n = genreCount[g] || 0;
+        const pct = Math.round(n / total * 100);
+        const barW = Math.round(n / maxGenre * 100);
+        return `
+          <div class="genre-row">
+            <span class="genre-name">${g}</span>
+            <div class="genre-bar-wrap">
+              <div class="genre-bar" style="width:${barW}%;background:${GENRE_COLORS[g]||GENRE_COLORS['その他']}"></div>
+            </div>
+            <span class="genre-num">${n}</span>
+            <span class="genre-pct">${pct}%</span>
+          </div>`;
+      }).join('');
+
     document.getElementById('list-count').textContent =
       filtered.length === total ? `${total} 冊` : `${filtered.length} 冊 / 全 ${total} 冊`;
 
