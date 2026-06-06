@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📚 読書記録</title>
+  <style>
+    :root {
+      --bg: #fdf6ec;
+      --card: #fff8f0;
+      --primary: #8b5e3c;
+      --primary-light: #c9956a;
+      --accent: #e8a87c;
+      --text: #3d2b1f;
+      --muted: #9e7c65;
+      --border: #e2c9b0;
+      --shadow: rgba(139,94,60,0.12);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--primary);
+      color: #fff8f0;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+    header h1 { font-size: 1.4rem; letter-spacing: .05em; }
+    header span { font-size: 1.6rem; }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    /* ── 追加フォーム ── */
+    .form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 16px var(--shadow);
+    }
+    .form-card h2 {
+      font-size: 1.05rem;
+      color: var(--primary);
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: .82rem;
+      color: var(--muted);
+      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+      letter-spacing: .04em;
+    }
+
+    input, select, textarea {
+      font-family: inherit;
+      font-size: .95rem;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      transition: border .2s, box-shadow .2s;
+      width: 100%;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(139,94,60,0.12);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+
+    .btn-add {
+      margin-top: 18px;
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: #fff8f0;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+      cursor: pointer;
+      letter-spacing: .06em;
+      transition: background .2s, transform .1s;
+    }
+    .btn-add:hover { background: var(--primary-light); }
+    .btn-add:active { transform: scale(.98); }
+
+    /* ── 検索・フィルター ── */
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .toolbar input, .toolbar select {
+      flex: 1;
+      min-width: 140px;
+    }
+
+    /* ── 書籍リスト ── */
+    .list-header {
+      font-size: .85rem;
+      color: var(--muted);
+      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+      margin-bottom: 12px;
+    }
+
+    .book-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .book-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: 0 2px 8px var(--shadow);
+      transition: box-shadow .2s, transform .15s;
+      position: relative;
+    }
+    .book-card:hover { box-shadow: 0 6px 18px var(--shadow); transform: translateY(-2px); }
+
+    .book-card[data-status="読了"]   { border-left-color: #7cb87a; }
+    .book-card[data-status="読書中"] { border-left-color: #e8a87c; }
+    .book-card[data-status="未読"]   { border-left-color: #b0c4de; }
+
+    .book-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .book-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--primary);
+      flex: 1;
+    }
+    .book-author {
+      font-size: .88rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .badge {
+      font-size: .75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+      white-space: nowrap;
+    }
+    .badge-status-未読    { background: #dce8f5; color: #4a6fa5; }
+    .badge-status-読書中  { background: #fdf0e0; color: #a06020; }
+    .badge-status-読了    { background: #e2f5e0; color: #3a7535; }
+    .badge-genre {
+      background: #f0e8dc;
+      color: var(--primary);
+      border: 1px solid var(--border);
+    }
+
+    .book-meta {
+      margin-top: 10px;
+      font-size: .83rem;
+      color: var(--muted);
+      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+    }
+
+    .book-memo {
+      margin-top: 10px;
+      font-size: .9rem;
+      color: var(--text);
+      background: #fdf3ea;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .book-actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+    .btn-edit, .btn-delete {
+      font-size: .8rem;
+      padding: 5px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+      transition: background .2s;
+    }
+    .btn-edit   { background: #fff; color: var(--primary); }
+    .btn-edit:hover { background: var(--border); }
+    .btn-delete { background: #fff; color: #c0392b; border-color: #e8b4b0; }
+    .btn-delete:hover { background: #fce8e6; }
+
+    .empty {
+      text-align: center;
+      padding: 48px 0;
+      color: var(--muted);
+      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+      font-size: .95rem;
+    }
+    .empty span { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+
+    /* ── モーダル（編集） ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.4);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 28px;
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 12px 40px rgba(0,0,0,.25);
+    }
+    .modal h2 { font-size: 1.05rem; color: var(--primary); margin-bottom: 18px; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+    .btn-save {
+      flex: 1;
+      padding: 11px;
+      background: var(--primary);
+      color: #fff8f0;
+      border: none;
+      border-radius: 8px;
+      font-size: .95rem;
+      cursor: pointer;
+      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+    }
+    .btn-save:hover { background: var(--primary-light); }
+    .btn-cancel {
+      flex: 1;
+      padding: 11px;
+      background: #fff;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: .95rem;
+      cursor: pointer;
+      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+    }
+    .btn-cancel:hover { background: var(--border); }
+
+    /* toast */
+    .toast {
+      position: fixed;
+      bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--primary);
+      color: #fff8f0;
+      padding: 10px 22px;
+      border-radius: 24px;
+      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+      font-size: .9rem;
+      opacity: 0;
+      transition: transform .3s, opacity .3s;
+      z-index: 200;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+<header>
+  <span>📚</span>
+  <h1>読書記録</h1>
+</header>
+
+<div class="container">
+
+  <!-- 追加フォーム -->
+  <div class="form-card">
+    <h2>📖 本を追加する</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label>書籍タイトル *</label>
+        <input type="text" id="f-title" placeholder="例：罪と罰" />
+      </div>
+      <div class="field">
+        <label>著者</label>
+        <input type="text" id="f-author" placeholder="例：ドストエフスキー" />
+      </div>
+      <div class="field">
+        <label>読書状況</label>
+        <select id="f-status">
+          <option value="未読">未読</option>
+          <option value="読書中">読書中</option>
+          <option value="読了">読了</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>ジャンル</label>
+        <select id="f-genre">
+          <option value="小説">小説</option>
+          <option value="ビジネス">ビジネス</option>
+          <option value="技術書">技術書</option>
+          <option value="歴史">歴史</option>
+          <option value="自己啓発">自己啓発</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>いつまでに読みたいか</label>
+        <input type="date" id="f-deadline" />
+      </div>
+      <div class="field full">
+        <label>メモ</label>
+        <textarea id="f-memo" placeholder="感想・気づき・引用など…"></textarea>
+      </div>
+    </div>
+    <button class="btn-add" onclick="addBook()">＋ 追加する</button>
+  </div>
+
+  <!-- 検索・フィルター -->
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="🔍 タイトル・著者で検索" oninput="render()" />
+    <select id="filter-status" onchange="render()">
+      <option value="">すべての状況</option>
+      <option value="未読">未読</option>
+      <option value="読書中">読書中</option>
+      <option value="読了">読了</option>
+    </select>
+    <select id="filter-genre" onchange="render()">
+      <option value="">すべてのジャンル</option>
+      <option value="小説">小説</option>
+      <option value="ビジネス">ビジネス</option>
+      <option value="技術書">技術書</option>
+      <option value="歴史">歴史</option>
+      <option value="自己啓発">自己啓発</option>
+      <option value="その他">その他</option>
+    </select>
+  </div>
+
+  <div class="list-header" id="list-count"></div>
+  <div class="book-list" id="book-list"></div>
+</div>
+
+<!-- 編集モーダル -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <h2>✏️ 本を編集する</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label>書籍タイトル *</label>
+        <input type="text" id="e-title" />
+      </div>
+      <div class="field">
+        <label>著者</label>
+        <input type="text" id="e-author" />
+      </div>
+      <div class="field">
+        <label>読書状況</label>
+        <select id="e-status">
+          <option value="未読">未読</option>
+          <option value="読書中">読書中</option>
+          <option value="読了">読了</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>ジャンル</label>
+        <select id="e-genre">
+          <option value="小説">小説</option>
+          <option value="ビジネス">ビジネス</option>
+          <option value="技術書">技術書</option>
+          <option value="歴史">歴史</option>
+          <option value="自己啓発">自己啓発</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>いつまでに読みたいか</label>
+        <input type="date" id="e-deadline" />
+      </div>
+      <div class="field full">
+        <label>メモ</label>
+        <textarea id="e-memo"></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">キャンセル</button>
+      <button class="btn-save" onclick="saveEdit()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const STORAGE_KEY = 'reading-log-v1';
+  let books = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  let editingId = null;
+
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
+  }
+
+  function uid() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2);
+  }
+
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  function addBook() {
+    const title = document.getElementById('f-title').value.trim();
+    if (!title) { alert('タイトルを入力してください。'); return; }
+
+    books.unshift({
+      id: uid(),
+      title,
+      author:   document.getElementById('f-author').value.trim(),
+      status:   document.getElementById('f-status').value,
+      genre:    document.getElementById('f-genre').value,
+      deadline: document.getElementById('f-deadline').value,
+      memo:     document.getElementById('f-memo').value.trim(),
+      createdAt: new Date().toISOString(),
+    });
+    save();
+    render();
+
+    ['f-title','f-author','f-memo'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-deadline').value = '';
+    document.getElementById('f-status').value = '未読';
+    document.getElementById('f-genre').value = '小説';
+
+    toast('📚 追加しました！');
+  }
+
+  function deleteBook(id) {
+    if (!confirm('この本を削除しますか？')) return;
+    books = books.filter(b => b.id !== id);
+    save();
+    render();
+    toast('🗑 削除しました');
+  }
+
+  function openEdit(id) {
+    const b = books.find(b => b.id === id);
+    if (!b) return;
+    editingId = id;
+    document.getElementById('e-title').value    = b.title;
+    document.getElementById('e-author').value   = b.author;
+    document.getElementById('e-status').value   = b.status;
+    document.getElementById('e-genre').value    = b.genre;
+    document.getElementById('e-deadline').value = b.deadline;
+    document.getElementById('e-memo').value     = b.memo;
+    document.getElementById('modal').classList.add('open');
+  }
+
+  function closeModal(e) {
+    if (e && e.target !== document.getElementById('modal')) return;
+    document.getElementById('modal').classList.remove('open');
+    editingId = null;
+  }
+
+  function saveEdit() {
+    const title = document.getElementById('e-title').value.trim();
+    if (!title) { alert('タイトルを入力してください。'); return; }
+    const idx = books.findIndex(b => b.id === editingId);
+    if (idx === -1) return;
+    books[idx] = {
+      ...books[idx],
+      title,
+      author:   document.getElementById('e-author').value.trim(),
+      status:   document.getElementById('e-status').value,
+      genre:    document.getElementById('e-genre').value,
+      deadline: document.getElementById('e-deadline').value,
+      memo:     document.getElementById('e-memo').value.trim(),
+    };
+    save();
+    render();
+    document.getElementById('modal').classList.remove('open');
+    editingId = null;
+    toast('✏️ 更新しました！');
+  }
+
+  function formatDate(str) {
+    if (!str) return '';
+    const d = new Date(str + 'T00:00:00');
+    return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+  }
+
+  function deadlineLabel(str) {
+    if (!str) return '';
+    const today = new Date(); today.setHours(0,0,0,0);
+    const d = new Date(str + 'T00:00:00');
+    const diff = Math.ceil((d - today) / 86400000);
+    if (diff < 0)   return `⚠️ 期限切れ（${formatDate(str)}）`;
+    if (diff === 0) return `🔥 今日が期限！`;
+    if (diff <= 7)  return `⏰ あと${diff}日（${formatDate(str)}）`;
+    return `📅 ${formatDate(str)}まで`;
+  }
+
+  function render() {
+    const q  = document.getElementById('search').value.toLowerCase();
+    const fs = document.getElementById('filter-status').value;
+    const fg = document.getElementById('filter-genre').value;
+
+    let filtered = books.filter(b => {
+      const matchQ = !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q);
+      const matchS = !fs || b.status === fs;
+      const matchG = !fg || b.genre === fg;
+      return matchQ && matchS && matchG;
+    });
+
+    document.getElementById('list-count').textContent =
+      `${filtered.length} 冊 / 全 ${books.length} 冊`;
+
+    const el = document.getElementById('book-list');
+    if (filtered.length === 0) {
+      el.innerHTML = `<div class="empty"><span>📭</span>該当する本が見つかりません</div>`;
+      return;
+    }
+
+    el.innerHTML = filtered.map(b => `
+      <div class="book-card" data-status="${b.status}">
+        <div class="book-top">
+          <div>
+            <div class="book-title">${esc(b.title)}</div>
+            ${b.author ? `<div class="book-author">${esc(b.author)}</div>` : ''}
+          </div>
+          <div class="badges">
+            <span class="badge badge-status-${b.status}">${b.status}</span>
+            <span class="badge badge-genre">${b.genre}</span>
+          </div>
+        </div>
+        ${b.deadline ? `<div class="book-meta">${deadlineLabel(b.deadline)}</div>` : ''}
+        ${b.memo ? `<div class="book-memo">${esc(b.memo)}</div>` : ''}
+        <div class="book-actions">
+          <button class="btn-edit"   onclick="openEdit('${b.id}')">編集</button>
+          <button class="btn-delete" onclick="deleteBook('${b.id}')">削除</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function esc(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+              .replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+  }
+
+  // Notionからインポートした初期データ（LocalStorageが空の場合のみ投入）
+  if (books.length === 0) {
+    books = [
+      // ── 読了 ──
+      { id: uid(), title: '人を動かす',                                           author: 'デール・カーネギー',       status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-11-13T07:22:39.522Z' },
+      { id: uid(), title: '自分の中に毒を持て',                                   author: '岡本太郎',                 status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-11-13T07:23:04.697Z' },
+      { id: uid(), title: '世界の一流は「休日」に何をしているのか',               author: '越川慎司',                 status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-04-06T13:29:40.945Z' },
+      { id: uid(), title: '億までの人億からの人',                                 author: '田中渓',                   status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-05-03T08:52:18.621Z' },
+      { id: uid(), title: '入社1年目のお金の教科書',                             author: '田口智隆',                 status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-05-03T08:56:01.610Z' },
+      { id: uid(), title: '国をつくるという仕事',                                 author: '西水美恵子',               status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-05-03T08:56:10.183Z' },
+      { id: uid(), title: '感情の整理学',                                         author: '和田秀樹',                 status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:32:08.283Z' },
+      { id: uid(), title: '仕事ができる人はなぜ筋トレをするのか',               author: '山本ケイイチ',             status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-03-23T11:41:31.693Z' },
+      { id: uid(), title: '世界一やさしい「やりたいこと」の見つけ方',           author: '八木仁平',                 status: '読了', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:26:35.569Z' },
+      { id: uid(), title: '聖書、コーラン、仏典 – 原典から宗教の本質をさぐる',  author: '中村圭志',                 status: '読了', genre: 'その他',   deadline: '', memo: '5月18日返却', createdAt: '2025-05-28T17:35:19.766Z' },
+      { id: uid(), title: 'マスカレード・ナイト',                                 author: '東野圭吾',                 status: '読了', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-08T16:20:31.493Z' },
+      { id: uid(), title: 'ボクたちはみんな大人になれなかった',                   author: '燃え殻',                   status: '読了', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-25T09:55:58.016Z' },
+      { id: uid(), title: '元彼の遺言状',                                         author: '新川帆立',                 status: '読了', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-08T16:31:41.145Z' },
+      { id: uid(), title: '愛するということ',                                     author: 'エーリッヒ・フロム',       status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-05-03T08:56:04.233Z' },
+      { id: uid(), title: '福翁自伝',                                             author: '福澤諭吉',                 status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:19:16.549Z' },
+      { id: uid(), title: '文明論之概略',                                         author: '福澤諭吉',                 status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:19:17.903Z' },
+      { id: uid(), title: '2040年半導体の未来',                                   author: '小柴満信',                 status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-03-23T11:41:29.581Z' },
+      { id: uid(), title: '楽しいカメラ',                                         author: '橘田龍馬',                 status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:35:03.233Z' },
+      { id: uid(), title: '美しい風景写真のマイルール',                           author: '',                         status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:34:26.802Z' },
+      // ── 未読（To Read / To Get） ──
+      { id: uid(), title: 'アルケミスト',                                         author: '',                         status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-07-30T04:56:21.657Z' },
+      { id: uid(), title: 'いつかティファニーで朝食を',                           author: '',                         status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-07-30T04:56:39.150Z' },
+      { id: uid(), title: 'シャーロック・ホームズの冒険',                         author: 'コナン・ドイル',           status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-08T16:37:35.034Z' },
+      { id: uid(), title: '宮沢賢治『銀河鉄道の夜』と宇宙の旅',                 author: '谷口義明',                 status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-08T16:48:46.099Z' },
+      { id: uid(), title: '君たちはどう生きるか',                                 author: '吉野源三郎',               status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-08T16:40:40.807Z' },
+      { id: uid(), title: '世界を変えた10冊の本',                                 author: '池上彰',                   status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-08T16:49:16.221Z' },
+      { id: uid(), title: '青が散る',                                             author: '宮本輝',                   status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-14T11:45:44.223Z' },
+      { id: uid(), title: '考える技術・書く技術',                                 author: 'バーバラ・ミント',         status: '未読', genre: 'ビジネス', deadline: '', memo: '',           createdAt: '2025-02-02T05:53:49.961Z' },
+      { id: uid(), title: 'コーポレートファイナンス 戦略と実践',                 author: '田中慎一/保田隆明',        status: '未読', genre: 'ビジネス', deadline: '', memo: '',           createdAt: '2025-01-13T16:09:04.747Z' },
+      { id: uid(), title: '21世紀の資本',                                         author: 'トマ・ピケティ',           status: '未読', genre: 'ビジネス', deadline: '', memo: '',           createdAt: '2025-01-08T16:38:55.218Z' },
+      { id: uid(), title: '芸術企業論',                                           author: '村上隆',                   status: '未読', genre: 'ビジネス', deadline: '', memo: '',           createdAt: '2025-01-08T16:37:56.843Z' },
+      { id: uid(), title: 'サピエンス全史',                                       author: 'ユヴァル・ノア・ハラリ',   status: '未読', genre: '歴史',     deadline: '', memo: '',           createdAt: '2025-01-08T16:57:45.620Z' },
+      { id: uid(), title: '君主論',                                               author: 'マキアヴェリ',             status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:45:04.540Z' },
+      { id: uid(), title: '方法序説・情念論',                                     author: 'デカルト',                 status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:35:53.164Z' },
+      { id: uid(), title: '後世への最大遺物デンマルク国の話',                     author: '内村鑑三',                 status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:45:46.627Z' },
+      { id: uid(), title: '道徳形而上学原論',                                     author: 'カント',                   status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:46:13.670Z' },
+      { id: uid(), title: '文明の衝突と21世紀の日本',                             author: 'サミュエル・ハンチントン', status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:47:57.565Z' },
+      { id: uid(), title: '東洋の理想',                                           author: '岡倉天心',                 status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:44:36.790Z' },
+      { id: uid(), title: '生の短さについて',                                     author: 'セネカ',                   status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:46:33.910Z' },
+      { id: uid(), title: '武士道',                                               author: '新渡戸稲造',               status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:42:45.362Z' },
+      { id: uid(), title: '菊と刀',                                               author: 'ルース・ベネディクト',     status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:44:18.388Z' },
+      { id: uid(), title: '老子',                                                 author: '老子',                     status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:36:28.480Z' },
+      { id: uid(), title: 'ルポ外国人ぎらい',                                     author: '宮下洋一',                 status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:47:11.095Z' },
+      { id: uid(), title: 'カレー移民の謎',                                       author: '室橋裕和',                 status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-10T18:24:51.020Z' },
+      { id: uid(), title: '地球に残された時間',                                   author: 'レスター・R・ブラウン',   status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:24:40.527Z' },
+      { id: uid(), title: 'ことわざ慣用句辞典',                                   author: '雨海博洋',                 status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:33:30.482Z' },
+      { id: uid(), title: '確実に自分を変えていく法',                             author: '茂木健一郎',               status: '未読', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:39:43.446Z' },
+      { id: uid(), title: '学問のしくみ辞典',                                     author: '茂木健一郎',               status: '未読', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:39:21.004Z' },
+      { id: uid(), title: '生き残る判断生き残れない行動',                         author: 'アマンダ・リプリー',       status: '未読', genre: '自己啓発', deadline: '', memo: '',           createdAt: '2025-01-08T16:25:17.866Z' },
+      { id: uid(), title: '時間栄養学入門',                                       author: '柴田重信',                 status: '未読', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:21:26.243Z' },
+    ];
+    save();
+  }
+
+  render();
+</script>
+</body>
+</html>
