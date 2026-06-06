@@ -3,69 +3,140 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>📚 読書記録</title>
+  <title>読書記録</title>
   <style>
     :root {
-      --bg: #fdf6ec;
-      --card: #fff8f0;
-      --primary: #8b5e3c;
-      --primary-light: #c9956a;
-      --accent: #e8a87c;
-      --text: #3d2b1f;
-      --muted: #9e7c65;
-      --border: #e2c9b0;
-      --shadow: rgba(139,94,60,0.12);
-      --radius: 14px;
+      --bg: #f5f5f7;
+      --surface: #ffffff;
+      --surface2: #fbfbfd;
+      --border: #d2d2d7;
+      --border-light: #e8e8ed;
+      --text: #1d1d1f;
+      --text-secondary: #6e6e73;
+      --text-tertiary: #aeaeb2;
+      --accent: #0071e3;
+      --accent-hover: #0077ed;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 2px 12px rgba(0,0,0,.08);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,.12);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif;
+      font-family: -apple-system, 'Hiragino Sans', 'SF Pro Text', BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
+    /* ── ヘッダー ── */
     header {
-      background: var(--primary);
-      color: #fff8f0;
-      padding: 18px 24px;
+      background: rgba(255,255,255,.85);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border-light);
+      padding: 0 24px;
+      height: 52px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      box-shadow: 0 2px 8px var(--shadow);
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
-    header h1 { font-size: 1.4rem; letter-spacing: .05em; }
-    header span { font-size: 1.6rem; }
+    .header-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #1d1d1f 0%, #6e6e73 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -.01em;
+    }
+    .header-count {
+      font-size: .82rem;
+      color: var(--text-secondary);
+    }
 
     .container {
-      max-width: 860px;
+      max-width: 980px;
       margin: 0 auto;
-      padding: 24px 16px;
+      padding: 28px 20px 60px;
+    }
+
+    /* ── 統計カード ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 640px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .stat-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-light);
+    }
+    .stat-label {
+      font-size: .75rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      letter-spacing: .02em;
+      margin-bottom: 6px;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -.03em;
+      line-height: 1;
+    }
+    .stat-value.total   { background: linear-gradient(135deg, #1d1d1f, #6e6e73); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-value.done    { background: linear-gradient(135deg, #30d158, #25a244); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-value.reading { background: linear-gradient(135deg, #ff9f0a, #e8820a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-value.unread  { background: linear-gradient(135deg, #0071e3, #0051a8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-sub {
+      font-size: .72rem;
+      color: var(--text-tertiary);
+      margin-top: 4px;
     }
 
     /* ── 追加フォーム ── */
     .form-card {
-      background: var(--card);
-      border: 1px solid var(--border);
+      background: var(--surface);
+      border: 1px solid var(--border-light);
       border-radius: var(--radius);
       padding: 24px;
-      margin-bottom: 32px;
-      box-shadow: 0 4px 16px var(--shadow);
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
     }
-    .form-card h2 {
-      font-size: 1.05rem;
-      color: var(--primary);
-      margin-bottom: 18px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid var(--border);
+    .section-title {
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 14px;
+      background: linear-gradient(180deg, #0071e3, #34aadc);
+      border-radius: 2px;
     }
 
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 12px;
     }
     @media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
 
@@ -73,183 +144,221 @@
     .field.full { grid-column: 1 / -1; }
 
     label {
-      font-size: .82rem;
-      color: var(--muted);
-      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
-      letter-spacing: .04em;
+      font-size: .75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: .02em;
     }
 
     input, select, textarea {
       font-family: inherit;
-      font-size: .95rem;
+      font-size: .92rem;
       padding: 9px 12px;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      background: #fff;
+      border-radius: var(--radius-sm);
+      background: var(--surface2);
       color: var(--text);
-      transition: border .2s, box-shadow .2s;
+      transition: border .15s, box-shadow .15s;
       width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236e6e73' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px;
     }
     input:focus, select:focus, textarea:focus {
       outline: none;
-      border-color: var(--primary-light);
-      box-shadow: 0 0 0 3px rgba(139,94,60,0.12);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,113,227,.15);
+      background: #fff;
     }
-    textarea { resize: vertical; min-height: 80px; }
+    textarea { resize: vertical; min-height: 72px; }
 
     .btn-add {
-      margin-top: 18px;
+      margin-top: 14px;
       width: 100%;
-      padding: 12px;
-      background: var(--primary);
-      color: #fff8f0;
+      padding: 11px;
+      background: var(--accent);
+      color: #fff;
       border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+      border-radius: var(--radius-sm);
+      font-size: .92rem;
+      font-weight: 600;
+      font-family: inherit;
       cursor: pointer;
-      letter-spacing: .06em;
-      transition: background .2s, transform .1s;
+      letter-spacing: -.01em;
+      transition: background .15s, transform .1s;
     }
-    .btn-add:hover { background: var(--primary-light); }
+    .btn-add:hover { background: var(--accent-hover); }
     .btn-add:active { transform: scale(.98); }
 
-    /* ── 検索・フィルター ── */
+    /* ── ツールバー ── */
     .toolbar {
       display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 8px;
+      margin-bottom: 16px;
       flex-wrap: wrap;
     }
-    .toolbar input, .toolbar select {
-      flex: 1;
-      min-width: 140px;
-    }
+    .toolbar input  { flex: 2; min-width: 160px; }
+    .toolbar select { flex: 1; min-width: 120px; }
 
-    /* ── 書籍リスト ── */
-    .list-header {
-      font-size: .85rem;
-      color: var(--muted);
-      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
-      margin-bottom: 12px;
-    }
-
-    .book-list {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .book-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-left: 5px solid var(--accent);
+    /* ── テーブル ── */
+    .table-wrap {
+      background: var(--surface);
       border-radius: var(--radius);
-      padding: 18px 20px;
-      box-shadow: 0 2px 8px var(--shadow);
-      transition: box-shadow .2s, transform .15s;
-      position: relative;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      overflow: hidden;
     }
-    .book-card:hover { box-shadow: 0 6px 18px var(--shadow); transform: translateY(-2px); }
 
-    .book-card[data-status="読了"]   { border-left-color: #7cb87a; }
-    .book-card[data-status="読書中"] { border-left-color: #e8a87c; }
-    .book-card[data-status="未読"]   { border-left-color: #b0c4de; }
-
-    .book-top {
+    .table-meta {
+      padding: 12px 18px;
+      font-size: .78rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-light);
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: flex-start;
       gap: 8px;
       flex-wrap: wrap;
     }
-    .book-title {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: var(--primary);
-      flex: 1;
-    }
-    .book-author {
-      font-size: .88rem;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .badges {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .badge {
-      font-size: .75rem;
-      padding: 3px 10px;
+    .sort-btns { display: flex; gap: 6px; }
+    .sort-btn {
+      font-size: .72rem;
+      padding: 4px 10px;
       border-radius: 20px;
-      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 500;
+      transition: all .15s;
       white-space: nowrap;
     }
-    .badge-status-未読    { background: #dce8f5; color: #4a6fa5; }
-    .badge-status-読書中  { background: #fdf0e0; color: #a06020; }
-    .badge-status-読了    { background: #e2f5e0; color: #3a7535; }
-    .badge-genre {
-      background: #f0e8dc;
-      color: var(--primary);
-      border: 1px solid var(--border);
+    .sort-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
     }
+    .sort-btn:hover:not(.active) { background: var(--border-light); }
 
-    .book-meta {
-      margin-top: 10px;
-      font-size: .83rem;
-      color: var(--muted);
-      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .88rem;
     }
+    thead th {
+      padding: 10px 16px;
+      text-align: left;
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border-light);
+      white-space: nowrap;
+    }
+    thead th:first-child { padding-left: 20px; }
+    thead th:last-child  { padding-right: 20px; text-align: right; }
 
-    .book-memo {
-      margin-top: 10px;
+    tbody tr {
+      border-bottom: 1px solid var(--border-light);
+      transition: background .1s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f5f5f7; }
+
+    td {
+      padding: 13px 16px;
+      vertical-align: middle;
+    }
+    td:first-child { padding-left: 20px; }
+    td:last-child  { padding-right: 20px; text-align: right; }
+
+    .td-title {
+      font-weight: 600;
       font-size: .9rem;
-      color: var(--text);
-      background: #fdf3ea;
-      padding: 10px 12px;
-      border-radius: 8px;
-      border-left: 3px solid var(--accent);
-      line-height: 1.6;
-      white-space: pre-wrap;
+      background: linear-gradient(135deg, #1d1d1f 0%, #3d3d42 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.3;
+    }
+    .td-author {
+      font-size: .78rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+    .td-deadline {
+      font-size: .78rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .td-deadline.warn   { color: #ff453a; font-weight: 600; }
+    .td-deadline.soon   { color: #ff9f0a; font-weight: 600; }
+
+    .badge {
+      display: inline-block;
+      font-size: .7rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .badge-未読   { background: rgba(0,113,227,.1);  color: #0071e3; }
+    .badge-読書中 { background: rgba(255,159,10,.12); color: #c07000; }
+    .badge-読了   { background: rgba(48,209,88,.12);  color: #1a8a38; }
+    .badge-genre {
+      background: var(--bg);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      margin-left: 4px;
     }
 
-    .book-actions {
-      margin-top: 12px;
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-    }
-    .btn-edit, .btn-delete {
-      font-size: .8rem;
-      padding: 5px 14px;
+    .row-actions { display: flex; gap: 6px; justify-content: flex-end; }
+    .btn-icon {
+      font-size: .75rem;
+      padding: 4px 10px;
       border-radius: 6px;
       border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
       cursor: pointer;
-      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
-      transition: background .2s;
+      font-family: inherit;
+      font-weight: 500;
+      transition: all .15s;
     }
-    .btn-edit   { background: #fff; color: var(--primary); }
-    .btn-edit:hover { background: var(--border); }
-    .btn-delete { background: #fff; color: #c0392b; border-color: #e8b4b0; }
-    .btn-delete:hover { background: #fce8e6; }
+    .btn-icon:hover { background: var(--border-light); color: var(--text); }
+    .btn-icon.delete:hover { background: rgba(255,59,48,.1); color: #ff3b30; border-color: rgba(255,59,48,.3); }
+
+    /* スマホでテーブル横スクロール */
+    @media (max-width: 640px) {
+      .table-wrap { overflow-x: auto; }
+      table { min-width: 560px; }
+      td, th { padding: 10px 10px; }
+      td:first-child, thead th:first-child { padding-left: 14px; }
+    }
 
     .empty {
       text-align: center;
-      padding: 48px 0;
-      color: var(--muted);
-      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
-      font-size: .95rem;
+      padding: 56px 0;
+      color: var(--text-tertiary);
+      font-size: .92rem;
     }
-    .empty span { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+    .empty-icon { font-size: 2.8rem; display: block; margin-bottom: 10px; }
 
-    /* ── モーダル（編集） ── */
+    /* ── モーダル ── */
     .modal-overlay {
       display: none;
       position: fixed; inset: 0;
-      background: rgba(0,0,0,.4);
+      background: rgba(0,0,0,.3);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       z-index: 100;
       align-items: center;
       justify-content: center;
@@ -257,57 +366,60 @@
     }
     .modal-overlay.open { display: flex; }
     .modal {
-      background: var(--card);
-      border-radius: var(--radius);
+      background: var(--surface);
+      border-radius: 16px;
       padding: 28px;
       width: 100%;
-      max-width: 560px;
+      max-width: 540px;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 12px 40px rgba(0,0,0,.25);
+      box-shadow: var(--shadow-lg);
     }
-    .modal h2 { font-size: 1.05rem; color: var(--primary); margin-bottom: 18px; }
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, #1d1d1f, #6e6e73);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
     .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
     .btn-save {
-      flex: 1;
-      padding: 11px;
-      background: var(--primary);
-      color: #fff8f0;
-      border: none;
-      border-radius: 8px;
-      font-size: .95rem;
-      cursor: pointer;
-      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+      flex: 1; padding: 11px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: var(--radius-sm);
+      font-size: .92rem; font-weight: 600;
+      font-family: inherit; cursor: pointer;
+      transition: background .15s;
     }
-    .btn-save:hover { background: var(--primary-light); }
+    .btn-save:hover { background: var(--accent-hover); }
     .btn-cancel {
-      flex: 1;
-      padding: 11px;
-      background: #fff;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: .95rem;
-      cursor: pointer;
-      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+      flex: 1; padding: 11px;
+      background: var(--surface2); color: var(--text-secondary);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      font-size: .92rem; font-family: inherit; cursor: pointer;
     }
-    .btn-cancel:hover { background: var(--border); }
+    .btn-cancel:hover { background: var(--border-light); }
 
     /* toast */
     .toast {
       position: fixed;
-      bottom: 24px; left: 50%;
+      bottom: 28px; left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: var(--primary);
-      color: #fff8f0;
-      padding: 10px 22px;
+      background: rgba(28,28,30,.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #fff;
+      padding: 10px 20px;
       border-radius: 24px;
-      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
-      font-size: .9rem;
+      font-size: .85rem;
+      font-weight: 500;
       opacity: 0;
-      transition: transform .3s, opacity .3s;
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
       z-index: 200;
       pointer-events: none;
+      white-space: nowrap;
     }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
   </style>
@@ -315,15 +427,39 @@
 <body>
 
 <header>
-  <span>📚</span>
-  <h1>読書記録</h1>
+  <span class="header-title">📚 読書記録</span>
+  <span class="header-count" id="header-count"></span>
 </header>
 
 <div class="container">
 
+  <!-- 統計 -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">TOTAL</div>
+      <div class="stat-value total" id="st-total">0</div>
+      <div class="stat-sub">登録冊数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">READ</div>
+      <div class="stat-value done" id="st-done">0</div>
+      <div class="stat-sub">読了</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">READING</div>
+      <div class="stat-value reading" id="st-reading">0</div>
+      <div class="stat-sub">読書中</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">UNREAD</div>
+      <div class="stat-value unread" id="st-unread">0</div>
+      <div class="stat-sub">未読</div>
+    </div>
+  </div>
+
   <!-- 追加フォーム -->
   <div class="form-card">
-    <h2>📖 本を追加する</h2>
+    <div class="section-title">本を追加する</div>
     <div class="form-grid">
       <div class="field">
         <label>書籍タイトル *</label>
@@ -364,7 +500,7 @@
     <button class="btn-add" onclick="addBook()">＋ 追加する</button>
   </div>
 
-  <!-- 検索・フィルター -->
+  <!-- ツールバー -->
   <div class="toolbar">
     <input type="text" id="search" placeholder="🔍 タイトル・著者で検索" oninput="render()" />
     <select id="filter-status" onchange="render()">
@@ -384,14 +520,41 @@
     </select>
   </div>
 
-  <div class="list-header" id="list-count"></div>
-  <div class="book-list" id="book-list"></div>
+  <!-- テーブル -->
+  <div class="table-wrap">
+    <div class="table-meta">
+      <span id="list-count" style="color:var(--text-secondary);font-size:.78rem;"></span>
+      <div class="sort-btns">
+        <button class="sort-btn active" data-sort="createdAt" onclick="setSort('createdAt')">登録日 ↓</button>
+        <button class="sort-btn" data-sort="title" onclick="setSort('title')">タイトル</button>
+        <button class="sort-btn" data-sort="status" onclick="setSort('status')">状況</button>
+        <button class="sort-btn" data-sort="deadline" onclick="setSort('deadline')">期限</button>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>タイトル / 著者</th>
+          <th>状況</th>
+          <th>ジャンル</th>
+          <th>期限</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="book-tbody"></tbody>
+    </table>
+    <div class="empty" id="empty-msg" style="display:none">
+      <span class="empty-icon">📭</span>
+      該当する本が見つかりません
+    </div>
+  </div>
+
 </div>
 
 <!-- 編集モーダル -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
   <div class="modal">
-    <h2>✏️ 本を編集する</h2>
+    <div class="modal-title">本を編集する</div>
     <div class="form-grid">
       <div class="field">
         <label>書籍タイトル *</label>
@@ -442,14 +605,10 @@
   const STORAGE_KEY = 'reading-log-v1';
   let books = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
   let editingId = null;
+  let sortKey = 'createdAt';
 
-  function save() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
-  }
-
-  function uid() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2);
-  }
+  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(books)); }
+  function uid()  { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
 
   function toast(msg) {
     const el = document.getElementById('toast');
@@ -458,13 +617,19 @@
     setTimeout(() => el.classList.remove('show'), 2200);
   }
 
+  function setSort(key) {
+    sortKey = key;
+    document.querySelectorAll('.sort-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.sort === key);
+    });
+    render();
+  }
+
   function addBook() {
     const title = document.getElementById('f-title').value.trim();
     if (!title) { alert('タイトルを入力してください。'); return; }
-
     books.unshift({
-      id: uid(),
-      title,
+      id: uid(), title,
       author:   document.getElementById('f-author').value.trim(),
       status:   document.getElementById('f-status').value,
       genre:    document.getElementById('f-genre').value,
@@ -472,23 +637,19 @@
       memo:     document.getElementById('f-memo').value.trim(),
       createdAt: new Date().toISOString(),
     });
-    save();
-    render();
-
+    save(); render();
     ['f-title','f-author','f-memo'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('f-deadline').value = '';
     document.getElementById('f-status').value = '未読';
     document.getElementById('f-genre').value = '小説';
-
     toast('📚 追加しました！');
   }
 
   function deleteBook(id) {
     if (!confirm('この本を削除しますか？')) return;
     books = books.filter(b => b.id !== id);
-    save();
-    render();
-    toast('🗑 削除しました');
+    save(); render();
+    toast('削除しました');
   }
 
   function openEdit(id) {
@@ -515,17 +676,14 @@
     if (!title) { alert('タイトルを入力してください。'); return; }
     const idx = books.findIndex(b => b.id === editingId);
     if (idx === -1) return;
-    books[idx] = {
-      ...books[idx],
-      title,
+    books[idx] = { ...books[idx], title,
       author:   document.getElementById('e-author').value.trim(),
       status:   document.getElementById('e-status').value,
       genre:    document.getElementById('e-genre').value,
       deadline: document.getElementById('e-deadline').value,
       memo:     document.getElementById('e-memo').value.trim(),
     };
-    save();
-    render();
+    save(); render();
     document.getElementById('modal').classList.remove('open');
     editingId = null;
     toast('✏️ 更新しました！');
@@ -534,18 +692,23 @@
   function formatDate(str) {
     if (!str) return '';
     const d = new Date(str + 'T00:00:00');
-    return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+    return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
   }
 
-  function deadlineLabel(str) {
-    if (!str) return '';
+  function deadlineInfo(str) {
+    if (!str) return { text: '', cls: '' };
     const today = new Date(); today.setHours(0,0,0,0);
     const d = new Date(str + 'T00:00:00');
     const diff = Math.ceil((d - today) / 86400000);
-    if (diff < 0)   return `⚠️ 期限切れ（${formatDate(str)}）`;
-    if (diff === 0) return `🔥 今日が期限！`;
-    if (diff <= 7)  return `⏰ あと${diff}日（${formatDate(str)}）`;
-    return `📅 ${formatDate(str)}まで`;
+    if (diff < 0)   return { text: `⚠️ 期限切れ`, cls: 'warn' };
+    if (diff === 0) return { text: `🔥 今日が期限`, cls: 'warn' };
+    if (diff <= 7)  return { text: `⏰ あと${diff}日`, cls: 'soon' };
+    return { text: formatDate(str), cls: '' };
+  }
+
+  function esc(str) {
+    return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                    .replace(/"/g,'&quot;').replace(/\n/g,'<br>');
   }
 
   function render() {
@@ -554,46 +717,70 @@
     const fg = document.getElementById('filter-genre').value;
 
     let filtered = books.filter(b => {
-      const matchQ = !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q);
+      const matchQ = !q || b.title.toLowerCase().includes(q) || (b.author||'').toLowerCase().includes(q);
       const matchS = !fs || b.status === fs;
       const matchG = !fg || b.genre === fg;
       return matchQ && matchS && matchG;
     });
 
-    document.getElementById('list-count').textContent =
-      `${filtered.length} 冊 / 全 ${books.length} 冊`;
+    // ソート
+    const statusOrder = { '読書中': 0, '未読': 1, '読了': 2 };
+    filtered.sort((a, b) => {
+      if (sortKey === 'title')    return a.title.localeCompare(b.title, 'ja');
+      if (sortKey === 'status')   return (statusOrder[a.status]||0) - (statusOrder[b.status]||0);
+      if (sortKey === 'deadline') {
+        if (!a.deadline && !b.deadline) return 0;
+        if (!a.deadline) return 1;
+        if (!b.deadline) return -1;
+        return a.deadline.localeCompare(b.deadline);
+      }
+      // createdAt（デフォルト：新しい順）
+      return b.createdAt.localeCompare(a.createdAt);
+    });
 
-    const el = document.getElementById('book-list');
+    // 統計更新
+    const total   = books.length;
+    const done    = books.filter(b => b.status === '読了').length;
+    const reading = books.filter(b => b.status === '読書中').length;
+    const unread  = books.filter(b => b.status === '未読').length;
+    document.getElementById('st-total').textContent   = total;
+    document.getElementById('st-done').textContent    = done;
+    document.getElementById('st-reading').textContent = reading;
+    document.getElementById('st-unread').textContent  = unread;
+    document.getElementById('header-count').textContent = `${total} 冊`;
+    document.getElementById('list-count').textContent =
+      filtered.length === total ? `${total} 冊` : `${filtered.length} 冊 / 全 ${total} 冊`;
+
+    const tbody = document.getElementById('book-tbody');
+    const empty = document.getElementById('empty-msg');
+
     if (filtered.length === 0) {
-      el.innerHTML = `<div class="empty"><span>📭</span>該当する本が見つかりません</div>`;
+      tbody.innerHTML = '';
+      empty.style.display = 'block';
       return;
     }
+    empty.style.display = 'none';
 
-    el.innerHTML = filtered.map(b => `
-      <div class="book-card" data-status="${b.status}">
-        <div class="book-top">
-          <div>
-            <div class="book-title">${esc(b.title)}</div>
-            ${b.author ? `<div class="book-author">${esc(b.author)}</div>` : ''}
-          </div>
-          <div class="badges">
-            <span class="badge badge-status-${b.status}">${b.status}</span>
-            <span class="badge badge-genre">${b.genre}</span>
-          </div>
-        </div>
-        ${b.deadline ? `<div class="book-meta">${deadlineLabel(b.deadline)}</div>` : ''}
-        ${b.memo ? `<div class="book-memo">${esc(b.memo)}</div>` : ''}
-        <div class="book-actions">
-          <button class="btn-edit"   onclick="openEdit('${b.id}')">編集</button>
-          <button class="btn-delete" onclick="deleteBook('${b.id}')">削除</button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function esc(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-              .replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+    tbody.innerHTML = filtered.map(b => {
+      const dl = deadlineInfo(b.deadline);
+      return `
+        <tr>
+          <td>
+            <div class="td-title">${esc(b.title)}</div>
+            ${b.author ? `<div class="td-author">${esc(b.author)}</div>` : ''}
+          </td>
+          <td><span class="badge badge-${b.status}">${b.status}</span></td>
+          <td><span class="badge badge-genre">${b.genre}</span></td>
+          <td><span class="td-deadline ${dl.cls}">${dl.text}</span></td>
+          <td>
+            <div class="row-actions">
+              <button class="btn-icon" onclick="openEdit('${b.id}')">編集</button>
+              <button class="btn-icon delete" onclick="deleteBook('${b.id}')">削除</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
   }
 
   // Notionからインポートした初期データ（LocalStorageが空の場合のみ投入）
@@ -619,7 +806,7 @@
       { id: uid(), title: '2040年半導体の未来',                                   author: '小柴満信',                 status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-03-23T11:41:29.581Z' },
       { id: uid(), title: '楽しいカメラ',                                         author: '橘田龍馬',                 status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:35:03.233Z' },
       { id: uid(), title: '美しい風景写真のマイルール',                           author: '',                         status: '読了', genre: 'その他',   deadline: '', memo: '',           createdAt: '2025-01-08T16:34:26.802Z' },
-      // ── 未読（To Read / To Get） ──
+      // ── 未読 ──
       { id: uid(), title: 'アルケミスト',                                         author: '',                         status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-07-30T04:56:21.657Z' },
       { id: uid(), title: 'いつかティファニーで朝食を',                           author: '',                         status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-07-30T04:56:39.150Z' },
       { id: uid(), title: 'シャーロック・ホームズの冒険',                         author: 'コナン・ドイル',           status: '未読', genre: '小説',     deadline: '', memo: '',           createdAt: '2025-01-08T16:37:35.034Z' },
