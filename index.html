@@ -363,12 +363,14 @@
     .badge-未読   { background: rgba(0,113,227,.1);  color: #0071e3; }
     .badge-読書中 { background: rgba(255,159,10,.12); color: #c07000; }
     .badge-読了   { background: rgba(48,209,88,.12);  color: #1a8a38; }
-    .badge-genre {
-      background: var(--bg);
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
-      margin-left: 4px;
-    }
+    .badge-genre { margin-left: 4px; }
+    .badge-genre-文学・評論     { background: rgba(191,90,242,.12); color: #9b3ec9; }
+    .badge-genre-ビジネス・経済 { background: rgba(0,113,227,.12);  color: #0051a8; }
+    .badge-genre-教育・自己啓発 { background: rgba(48,209,88,.12);  color: #1a8a38; }
+    .badge-genre-歴史・地理     { background: rgba(255,159,10,.14); color: #c07000; }
+    .badge-genre-人文・思想・宗教{ background: rgba(255,107,107,.12);color: #c0392b; }
+    .badge-genre-政治・社会     { background: rgba(100,210,255,.18);color: #0077aa; }
+    .badge-genre-趣味・実用     { background: rgba(174,174,178,.18);color: #6e6e73; }
 
     .row-actions { display: flex; gap: 6px; justify-content: flex-end; }
     .btn-icon {
@@ -863,7 +865,7 @@
             ${b.author ? `<div class="td-author">${esc(b.author)}</div>` : ''}
           </td>
           <td><span class="badge badge-${b.status}">${b.status}</span></td>
-          <td><span class="badge badge-genre">${b.genre}</span></td>
+          <td><span class="badge badge-genre badge-genre-${b.genre}">${b.genre}</span></td>
           <td><span class="td-deadline ${dl.cls}">${dl.text}</span></td>
           <td>
             <div class="row-actions">
