@@ -586,6 +586,7 @@
         <button class="sort-btn active" data-sort="createdAt" onclick="setSort('createdAt')">登録日 ↓</button>
         <button class="sort-btn" data-sort="title" onclick="setSort('title')">タイトル</button>
         <button class="sort-btn" data-sort="status" onclick="setSort('status')">状況</button>
+        <button class="sort-btn" data-sort="genre" onclick="setSort('genre')">ジャンル</button>
         <button class="sort-btn" data-sort="deadline" onclick="setSort('deadline')">期限</button>
       </div>
     </div>
@@ -786,6 +787,7 @@
     const statusOrder = { '読書中': 0, '未読': 1, '読了': 2 };
     filtered.sort((a, b) => {
       if (sortKey === 'title')    return a.title.localeCompare(b.title, 'ja');
+      if (sortKey === 'genre')    return a.genre.localeCompare(b.genre, 'ja');
       if (sortKey === 'status')   return (statusOrder[a.status]||0) - (statusOrder[b.status]||0);
       if (sortKey === 'deadline') {
         if (!a.deadline && !b.deadline) return 0;
